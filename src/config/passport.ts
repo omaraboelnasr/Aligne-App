@@ -1,7 +1,8 @@
 import passport from "passport";
 import passportGoogle from "passport-google-oauth20";
 import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } from "../utils/secrets";
-import User from "../AuthModule/userModels";
+import User from "../models/userModels";
+import jwt from 'jsonwebtoken';
 
 
 const GoogleStrategy = passportGoogle.Strategy;
@@ -11,7 +12,7 @@ passport.use(
         {
             clientID: GOOGLE_CLIENT_ID,
             clientSecret: GOOGLE_CLIENT_SECRET,
-            callbackURL: "/auth/google/redirect",
+            callbackURL: "api/v1/auth/google/redirect",
         },
         async (accessToken, refreshToken, profile, done) => {
             console.log("profile : ", profile);
@@ -27,24 +28,20 @@ passport.use(
                     //profile picture ++
                     // we are using optional chaining because profile.emails may be undefined.
                 });
-                if (user) {
-                    done(null, user);
-                }
-            } else {
-                done(null, user);
-            }
 
+            }
+            const token = jwt.sign(
+                {
+                    id: user.id,
+                    googleId: user.googleId,
+                    displayName: user.username,
+                    email: user.email,
+                },
+                process.env.JWT_SECRET as string,
+                { expiresIn: '1h' }
+            );
+
+            done(null, { user, token });
         }
     )
 );
-
-
-passport.serializeUser((user: any, done) => {
-    done(null, user);
-});
-
-passport.deserializeUser((id, done) => {
-    User.findById(id).then((user) => {
-        done(null, user);
-    });
-});
