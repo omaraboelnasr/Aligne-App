@@ -1,6 +1,6 @@
 import passport from "passport";
 import passportGoogle from "passport-google-oauth20";
-import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } from "../utils/secrets";
+import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET ,GOOGLE_REDIRECT_URL} from "../utils/secrets";
 import User from "../models/userModels";
 import jwt from 'jsonwebtoken';
 
@@ -12,7 +12,7 @@ passport.use(
         {
             clientID: GOOGLE_CLIENT_ID,
             clientSecret: GOOGLE_CLIENT_SECRET,
-            callbackURL: "api/v1/auth/google/redirect",
+            callbackURL: GOOGLE_REDIRECT_URL,
         },
         async (accessToken, refreshToken, profile, done) => {
             console.log("profile : ", profile);
