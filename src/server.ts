@@ -7,27 +7,28 @@ import passport from 'passport'
 import cookieSession from 'cookie-session'
 import authRoutes from "./AuthModule/authRoutes";
 import "./config/passport";
+import path from 'path';
 export const COOKIE_KEY = process.env.COOKIE_KEY as string;
-
+import session from 'express-session';
 dotenv.config();
 
 const app = express();
 app.set("view engine", "ejs");
 
-app.use(
-    cookieSession({
-        maxAge: 24 * 60 * 60 * 1000,
-        keys: [COOKIE_KEY],
-    })
-);
 
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: false
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 const port = 3000
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
-mongoose.connect('mongodb://localhost:27017/pms').then(() => {
+mongoose.connect('mongodb://127.0.0.1:27017/pms').then(() => {
     console.log("connected to DB");
 }).catch((err) => {
     console.log(err);
@@ -38,6 +39,12 @@ app.get("/", (req, res) => {
 });
 app.use("/auth", authRoutes);
 
+app.get('/profile', (req, res) => {
+    if (!req.user) {
+        return res.redirect('/');
+    }
+    res.render('profile', { user: req.user });
+});
 app.use(express.json());
 
 // app.use(userRouter)

@@ -17,10 +17,11 @@ router.get(
 
 router.get(
     "/logout",
-    
+
 );
 
 router.get("/google/redirect", passport.authenticate("google"), (req, res) => {
+    console.log("req.session : ", req.session);
     res.redirect("/profile");
 });
 
