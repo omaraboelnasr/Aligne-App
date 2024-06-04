@@ -24,6 +24,7 @@ router.get("/google/redirect", passport.authenticate("google", { session: false 
     }
 });
 
+
 router.get('/profile', (req, res) => {
     if (!req.user) {
         return res.redirect('/');

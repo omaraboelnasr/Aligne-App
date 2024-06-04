@@ -25,6 +25,12 @@ mongoose.connect('mongodb://127.0.0.1:27017/pms').then(() => {
     console.log(err);
 })
 
+app.use(
+    cors({
+        origin:'http://localhost:5173'
+    })
+)
+
 app.use('/', router);
 
 

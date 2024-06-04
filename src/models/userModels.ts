@@ -6,12 +6,14 @@ export type UserDocument = Document & {
   username: string;
   email: string;
   googleId: string;
+  profileImage:string
 };
 
 const userSchema = new Schema<UserDocument>({
   username: String,
   email: String,
   googleId: String,
+  profileImage:String,
 });
 
 const User = mongoose.model<UserDocument>("User", userSchema);
