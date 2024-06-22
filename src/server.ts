@@ -27,15 +27,15 @@ mongoose.connect('mongodb://127.0.0.1:27017/pms').then(() => {
 
 app.use(
     cors({
-        origin:'http://localhost:5173'
+        origin:'http://localhost:5173',
     })
 )
-
+app.use(express.json());
 app.use('/', router);
 
 
 
-app.use(express.json());
+
 
 // app.use(userRouter)
 // app.use('/auth',authRouter)
