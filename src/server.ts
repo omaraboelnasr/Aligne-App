@@ -3,12 +3,8 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import passport from 'passport'
-import cookieSession from 'cookie-session'
-import authRoutes from "./routes/auth/auth.routes";
 import "./config/passport";
-import path from 'path';
 export const COOKIE_KEY = process.env.COOKIE_KEY as string;
-import session from 'express-session';
 import router from './routes/index.routes';
 dotenv.config();
 
@@ -33,12 +29,6 @@ app.use(
 app.use(express.json());
 app.use('/', router);
 
-
-
-
-
-// app.use(userRouter)
-// app.use('/auth',authRouter)
 
 
 app.use("*", (req, res, next) => {

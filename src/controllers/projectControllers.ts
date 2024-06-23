@@ -3,8 +3,8 @@ import { AppRequest } from '../types/custom/user';
 import Project from "../models/projectModels";
 
 const createProject = async (req: AppRequest, res: Response, next: NextFunction)=>{
-    let {title,description,icon,color,members} = req.body
-    let projectOwner = req.appUser?._id
+    const {title,description,icon,color,members} = req.body
+    const projectOwner = req.appUser?._id
     try{
         await Project.create({projectOwner,title,description,icon,color,members})
         res.status(201).json({
@@ -20,13 +20,13 @@ const createProject = async (req: AppRequest, res: Response, next: NextFunction)
 }
 
 const updateProject = async (req: AppRequest, res: Response, next: NextFunction)=>{
-    let { id } = req.params;
-    let project = req.body
+    const { id } = req.params;
+    const project = req.body
     try{
-        await Project.findByIdAndUpdate(id, project, {
-			new: true,
-			runValidator: true,
-		});
+        const proj = await Project.updateOne({_id:id}, project)
+        if(proj.matchedCount===0){
+            throw new Error('This feature not found')
+        }
         res.status(201).json({
             message:'Project updated successfully'
         })
@@ -40,7 +40,7 @@ const updateProject = async (req: AppRequest, res: Response, next: NextFunction)
 }
 
 const getProject = async (req: AppRequest, res: Response, next: NextFunction)=>{
-    let { id } = req.params;
+    const { id } = req.params;
     try{
         const project = await Project.findById(id)
         res.status(201).json({
@@ -57,7 +57,7 @@ const getProject = async (req: AppRequest, res: Response, next: NextFunction)=>{
 }
 
 const getAllProject = async (req: AppRequest, res: Response, next: NextFunction)=>{
-    let projectOwner = req.appUser?._id
+    const projectOwner = req.appUser?._id
     try{
         const projects = await Project.find({projectOwner})
         res.status(201).json({
@@ -74,7 +74,7 @@ const getAllProject = async (req: AppRequest, res: Response, next: NextFunction)
 }
 
 const deleteProject = async (req: AppRequest, res: Response, next: NextFunction)=>{
-    let { id } = req.params;
+    const { id } = req.params;
     try{
         await Project.findByIdAndDelete(id)
         res.status(201).json({
