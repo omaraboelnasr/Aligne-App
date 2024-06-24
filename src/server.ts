@@ -1,11 +1,13 @@
 import dotenv from 'dotenv';
-import express from 'express';
+import 'express-async-errors';
+import express, { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import passport from 'passport'
 import "./config/passport";
 export const COOKIE_KEY = process.env.COOKIE_KEY as string;
 import router from './routes/index.routes';
+import { HttpError } from './utils/customErrors';
 dotenv.config();
 
 const app = express();
@@ -29,7 +31,10 @@ app.use(
 app.use(express.json());
 app.use('/', router);
 
-
+// global error handler
+app.use((err:HttpError,req:Request,res:Response,next:NextFunction):any=>{
+    res.status(err.statusCode||500).json({message:err.message||'internal server error',errorCode:err.errCode})
+})
 
 app.use("*", (req, res, next) => {
     res.status(404).json({ message: "Not Found" });

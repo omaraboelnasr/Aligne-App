@@ -3,9 +3,7 @@ import { Types } from 'mongoose';
 
 const Schema = mongoose.Schema;
 interface Member {
-    userName: string;
     userId: Types.ObjectId;
-    role: string;
 }
 
 interface Project {
@@ -17,9 +15,7 @@ interface Project {
     members: Member[]
 }
 const memberSchema = new Schema<Member>({
-    userName: { type: String },
     userId: { type: mongoose.SchemaTypes.ObjectId, ref: 'User' },
-    role: { type: String }
 });
 
 const projectSchema = new Schema<Project>(
