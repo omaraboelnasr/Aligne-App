@@ -23,8 +23,3 @@ export class NotAuthorized extends HttpError{
     }
 }
 
-export class NotFoundDataError extends HttpError{
-    constructor(entity:string){
-        super({message:`${entity} data not found`,statusCode:404,errCode:`${entity.toUpperCase()}.NOT_FOUND`});
-    }
-}

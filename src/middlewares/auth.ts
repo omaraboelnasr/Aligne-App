@@ -10,7 +10,10 @@ const jwtVerify: (
   options?: jwt.VerifyOptions & { complete?: false },
 )=>Promise<jwt.JwtPayload> = promisify(jwt.verify)
 
+
+
 export async function auth(req: AppRequest, res: Response, next: NextFunction) {
+
   const { authorization } = req.headers;
 
   if (!authorization) {

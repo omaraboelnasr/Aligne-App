@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { AppRequest } from '../types/custom/user';
 import Project from "../models/projectModels";
-import { NotAuthorized, NotFoundDataError, NotFoundError } from '../utils/customErrors';
+import { NotAuthorized, NotFoundError } from '../utils/customErrors';
 
 const createProject = async (req: AppRequest, res: Response, next: NextFunction) => {
     const { title, description, icon, color, members } = req.body
@@ -15,14 +15,6 @@ const createProject = async (req: AppRequest, res: Response, next: NextFunction)
 const updateProject = async (req: AppRequest, res: Response, next: NextFunction) => {
     const { id } = req.params;
     const project = req.body
-    const projectOwnerId = req.appUser?._id
-    const proj = await Project.findOne({ _id: id })
-    if (!proj) {
-        throw new NotFoundError('project', id)
-    }
-    if (proj?.projectOwner.toString() != projectOwnerId) {
-        throw new NotAuthorized('project', 'update')
-    }
     const updatedProject = await Project.updateOne({ _id: id }, project);
     if (updatedProject.matchedCount === 0) {
         throw new NotFoundError('project', id)
@@ -36,14 +28,6 @@ const getProject = async (req: AppRequest, res: Response, next: NextFunction) =>
     const { id } = req.params;
     const userId = req.appUser?._id
     const project = await Project.findOne({ _id: id })
-    if (!project) {
-        throw new NotFoundError('project', id)
-    }
-    const isUserMemberOfProject = project?.members.find((user) => user.userId.toString() == userId)
-    const isUserOwnerOfProject = project?.projectOwner.toString() == userId
-    if (!isUserOwnerOfProject || !isUserMemberOfProject) {
-        throw new NotAuthorized('project', 'get')
-    }
     res.status(201).json({
         message: 'Project get successfully',
         data: project,
@@ -54,9 +38,6 @@ const getProject = async (req: AppRequest, res: Response, next: NextFunction) =>
 const getAllProject = async (req: AppRequest, res: Response, next: NextFunction) => {
     const userId = req.appUser?._id
     const projects = await Project.find({$or:[{ projectOwner: userId },{ members: userId }]})
-    if(!projects){
-        throw new NotFoundDataError('Projects')
-    }
     res.status(201).json({
         message: 'Projects get successfully',
         data: projects,
