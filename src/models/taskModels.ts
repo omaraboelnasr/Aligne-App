@@ -51,7 +51,7 @@ const taskSchema = new Schema<Task>({
     assignee:{
         type:[assigneeSchema]
     }
-})
+},{timestamps:true})
 
 const Task = mongoose.model<Task>('Task', taskSchema)
 export default Task

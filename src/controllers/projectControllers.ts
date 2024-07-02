@@ -26,7 +26,6 @@ const updateProject = async (req: AppRequest, res: Response, next: NextFunction)
 
 const getProject = async (req: AppRequest, res: Response, next: NextFunction) => {
     const { id } = req.params;
-    const userId = req.appUser?._id
     const project = await Project.findOne({ _id: id })
     res.status(201).json({
         message: 'Project get successfully',
@@ -37,12 +36,11 @@ const getProject = async (req: AppRequest, res: Response, next: NextFunction) =>
 
 const getAllProject = async (req: AppRequest, res: Response, next: NextFunction) => {
     const userId = req.appUser?._id
-    const projects = await Project.find({$or:[{ projectOwner: userId },{ members: userId }]})
+    const projects = await Project.find({$or:[{ projectOwner: userId },{ 'members.userId': userId }]})
     res.status(201).json({
         message: 'Projects get successfully',
         data: projects,
     })
-
 }
 
 const deleteProject = async (req: AppRequest, res: Response, next: NextFunction) => {

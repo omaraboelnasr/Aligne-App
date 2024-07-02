@@ -4,9 +4,8 @@ import { AppRequest } from '../types/custom/user';
 import { NotFoundError } from '../utils/customErrors';
 
 const createFeature = async (req: AppRequest, res: Response, next: NextFunction) => {
-    const { title, description, color } = req.body
-    const { id } = req.params;
-    await Feature.create({ projectId: id, title, description, color })
+    const { projectId,title, description, color } = req.body
+    await Feature.create({ projectId, title, description, color })
     res.status(201).json({
         message: 'Feature added successfully'
     })
@@ -31,7 +30,6 @@ const getAllFeature = async (req: AppRequest, res: Response, next: NextFunction)
         message: 'Features get successfully',
         data: features,
     })
-
 }
 
 const deleteFeature = async (req: AppRequest, res: Response, next: NextFunction) => {

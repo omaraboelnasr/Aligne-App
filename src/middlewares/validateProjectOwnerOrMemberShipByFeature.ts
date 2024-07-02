@@ -11,7 +11,7 @@ export function validateProjectOwnerOrMemberShipByFeature(idPath:string,entity:s
         const projectUserId = req.appUser?._id
         const feat = await Feature.findOne({ _id: id })
         if (!feat) {
-            throw new NotFoundError(entity, id)
+            throw new NotFoundError('feature', id)
         }
     
         const project = await Project.findOne({ _id: feat?.projectId })
