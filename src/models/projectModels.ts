@@ -4,6 +4,7 @@ import { Types } from 'mongoose';
 const Schema = mongoose.Schema;
 interface Member {
     userId: Types.ObjectId;
+    username:string
 }
 
 interface Project {
@@ -16,6 +17,7 @@ interface Project {
 }
 const memberSchema = new Schema<Member>({
     userId: { type: mongoose.SchemaTypes.ObjectId, ref: 'User' },
+    username:{type:String}
 });
 
 const projectSchema = new Schema<Project>(

@@ -14,6 +14,7 @@ export function validateTaskOwnerOrMemberShip(idPath:string,entity:string,action
         }
         const isUserOwnerOfTask = task?.taskOwner.toString() == UserId
         const isUserAssigneeOfTask = task?.assignee.find((user) => user.userId.toString() == UserId)
+        // const isUserMemberOfProject = project.members.some((user) => user.userId && user.userId.toString() === projectUserId?.toString());
 
         if (!isUserOwnerOfTask && !isUserAssigneeOfTask) {
             throw new NotAuthorized(entity, action)

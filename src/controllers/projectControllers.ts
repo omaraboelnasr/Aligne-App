@@ -36,7 +36,7 @@ const getProject = async (req: AppRequest, res: Response, next: NextFunction) =>
 
 const getAllProject = async (req: AppRequest, res: Response, next: NextFunction) => {
     const userId = req.appUser?._id
-    const projects = await Project.find({$or:[{ projectOwner: userId },{ 'members.userId': userId }]})
+    const projects = await Project.find({$or:[{ projectOwner: userId },{ 'members._id': userId }]})
     res.status(201).json({
         message: 'Projects get successfully',
         data: projects,
@@ -53,7 +53,7 @@ const deleteProject = async (req: AppRequest, res: Response, next: NextFunction)
     if (proj?.projectOwner.toString() != projectOwnerId) {
         throw new NotAuthorized('project', 'delete')
     }
-    await Project.deleteOne({ id })
+    await Project.deleteOne({ _id: id  })
     res.status(201).json({
         message: 'Project deleted successfully',
     })

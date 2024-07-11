@@ -8,13 +8,14 @@ export function validateProjectOwnerOrMemberShip(idPath:string,entity:string,act
     return async(req:AppRequest,res:Response,next:NextFunction)=>{
         const id = _.get(req,idPath)
         const projectUserId = req.appUser?._id
+
         const project = await Project.findOne({ _id: id })
         if (!project) {
             throw new NotFoundError(entity, id)
         }
-        const isUserOwnerOfProject = project?.projectOwner.toString() == projectUserId
+        const isUserOwnerOfProject = project.projectOwner.toString() == projectUserId?.toString()
         
-        const isUserMemberOfProject = project?.members.find((user) => user.userId.toString() == projectUserId)
+        const isUserMemberOfProject = project.members.some((user) => user.userId && user.userId.toString() === projectUserId?.toString());
 
         if (!isUserOwnerOfProject && !isUserMemberOfProject) {
             throw new NotAuthorized(entity, action)

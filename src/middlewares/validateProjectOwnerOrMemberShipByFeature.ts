@@ -15,7 +15,7 @@ export function validateProjectOwnerOrMemberShipByFeature(idPath:string,entity:s
         }
     
         const project = await Project.findOne({ _id: feat?.projectId })
-        const isUserMemberOfProject = project?.members.find((user) => user.userId.toString() == projectUserId)
+        const isUserMemberOfProject = project?.members.some((user) => user.userId && user.userId.toString() === projectUserId?.toString());
         const isUserOwnerOfProject = project?.projectOwner.toString() == projectUserId
         if (!isUserOwnerOfProject && !isUserMemberOfProject) {
             throw new NotAuthorized(entity, action)
